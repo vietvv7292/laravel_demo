@@ -69,6 +69,6 @@ class DemoController extends Controller
 
     public function authDemo()
     {
-        return Auth::check() ? "Bạn đã đăng nhập!" : redirect('/login');
+        return Auth::check() ? redirect('dashboard') : redirect('/login');
     }
 }

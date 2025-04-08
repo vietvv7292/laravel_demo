@@ -59,3 +59,15 @@ Route::middleware(['auth'])->group(function () {
 
 // require __DIR__.'/settings.php';
 // require __DIR__.'/auth.php';
+
+
+// define('DB_DRIVER', 'mysqli');
+// define('DB_HOSTNAME', 'localhost');
+// define('DB_USERNAME', 'vietvv');
+// define('DB_PASSWORD', '12345678');
+// define('DB_SSL_KEY', '');
+// define('DB_SSL_CERT', '');
+// define('DB_SSL_CA', '');
+// define('DB_DATABASE', 'opencart3');
+// define('DB_PORT', '3306');
+// define('DB_PREFIX', 'oc_');

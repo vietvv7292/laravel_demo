@@ -43,6 +43,8 @@ use App\Http\Controllers\AuthController;
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
+Route::post('/register', [AuthController::class, 'register']);
 </code></pre>
 
                 <h5>3.2 Tạo Controller</h5>
@@ -51,8 +53,10 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
                 <pre><code>
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -79,13 +83,35 @@ class AuthController extends Controller
         $request->session()->regenerateToken();
         return redirect('/login');
     }
+
+    public function showRegisterForm() {
+        return view('auth.register');
+    }
+
+    public function register(Request $request) {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users',
+            'password' => 'required|min:6|confirmed',
+        ]);
+
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
+
+        Auth::login($user);
+
+        return redirect('/dashboard');
+    }
 }
 </code></pre>
 
-                <h5>3.3 Tạo View Login</h5>
+                <h5>3.3 Tạo View Login & Register</h5>
                 <pre><code>
 <!-- resources/views/auth/login.blade.php -->
-<form method="POST" action="login">
+<form method="POST" action="/login">
     @csrf
     <label>Email</label>
     <input type="email" name="email" required>
@@ -95,6 +121,28 @@ class AuthController extends Controller
 
     <button type="submit">Đăng nhập</button>
 </form>
+<a href="{{ route('register') }}">Đăng ký</a>
+</code></pre>
+
+<pre><code>
+<!-- resources/views/auth/register.blade.php -->
+<form method="POST" action="/register">
+    @csrf
+    <label>Tên</label>
+    <input type="text" name="name" required>
+
+    <label>Email</label>
+    <input type="email" name="email" required>
+
+    <label>Mật khẩu</label>
+    <input type="password" name="password" required>
+
+    <label>Xác nhận mật khẩu</label>
+    <input type="password" name="password_confirmation" required>
+
+    <button type="submit">Đăng ký</button>
+</form>
+<a href="{{ route('login') }}">Đăng nhập</a>
 </code></pre>
 
                 <h5>3.4 Tạo Seeder Người Dùng</h5>
@@ -156,6 +204,74 @@ php artisan passport:install</code></pre>
                     <li>Xác thực 2 yếu tố bằng OTP hoặc Google Authenticator</li>
                     <li>Sử dụng package <code>spatie/laravel-permission</code> để phân quyền theo role</li>
                 </ul>
+
+                <h3>5. Authentication API nâng cao</h3>
+
+                <h5>5.1 Laravel Sanctum</h5>
+                <p>Phù hợp với SPA, ứng dụng mobile hoặc API đơn giản:</p>
+                <pre><code>composer require laravel/sanctum
+php artisan vendor:publish --provider="Laravel\Sanctum\SanctumServiceProvider"
+php artisan migrate</code></pre>
+                <p>Thêm middleware vào <code>api</code> trong <code>app/Http/Kernel.php</code>:</p>
+                <pre><code>'api' => [
+    \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
+    'throttle:api',
+    \Illuminate\Routing\Middleware\SubstituteBindings::class,
+],</code></pre>
+                <p>Đăng nhập và tạo token API:</p>
+                <pre><code>
+public function login(Request $request)
+{
+    $user = User::where('email', $request->email)->first();
+
+    if (! $user || ! Hash::check($request->password, $user->password)) {
+        return response()->json(['message' => 'Đăng nhập thất bại'], 401);
+    }
+
+    $token = $user->createToken('api-token')->plainTextToken;
+
+    return response()->json(['token' => $token]);
+}
+</code></pre>
+                <p>Bảo vệ route với middleware <code>auth:sanctum</code>:</p>
+                <pre><code>
+Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+    return $request->user();
+});
+</code></pre>
+
+                <h5>5.2 Laravel Passport</h5>
+                <p>Phù hợp nếu bạn cần xác thực theo chuẩn OAuth2:</p>
+                <pre><code>composer require laravel/passport
+php artisan migrate
+php artisan passport:install</code></pre>
+                <p>Trong <code>App\Models\User</code>:</p>
+                <pre><code>
+use Laravel\Passport\HasApiTokens;
+
+class User extends Authenticatable
+{
+    use HasApiTokens, Notifiable;
+}
+</code></pre>
+                <p>Trong <code>AuthServiceProvider</code>:</p>
+                <pre><code>
+use Laravel\Passport\Passport;
+
+public function boot()
+{
+    Passport::routes();
+}
+</code></pre>
+                <p>Trong <code>config/auth.php</code>:</p>
+                <pre><code>
+'guards' => [
+    'api' => [
+        'driver' => 'passport',
+        'provider' => 'users',
+    ],
+],
+</code></pre>
 
             </div>
             <div class="card-footer text-center">
