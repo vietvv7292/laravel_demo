@@ -11,28 +11,15 @@ class DocsController extends Controller
         return view('docs.queue');
     }
 
-    public function queueGuideDoc()
-    {
-        return view('docs.queue_guide');
-    }
-
     public function eventDoc()
     {
         return view('docs.event');
     }
 
-    public function eventGuideDoc()
-    {
-        return view('docs.event_guide');
-    }
-
     public function authDoc()
     {
-        return view('docs.auth');
+        return view('docs.authentication');
     }
 
-    public function authGuideDoc()
-    {
-        return view('docs.auth_guide');
-    }
+
 }

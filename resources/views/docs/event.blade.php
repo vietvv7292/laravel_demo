@@ -11,7 +11,7 @@
 
     <div class="container mt-5">
         <div class="card shadow-lg">
-            <div class="card-header bg-primary text-white text-center">
+            <div class="card-header bg-success text-white text-center">
                 <h1>Events trong Laravel</h1>
             </div>
             <div class="card-body">

@@ -8,6 +8,7 @@ use App\Http\Controllers\QueueController;
 use App\Http\Controllers\DemoController;
 
 Route::get('/demo', [DemoController::class, 'index']);
+Route::get('/', [DemoController::class, 'index']);
 Route::get('/demo/queue', [DemoController::class, 'queueDemo']);
 Route::get('/demo/event', [DemoController::class, 'eventDemo']);
 Route::get('/demo/auth', [DemoController::class, 'authDemo']);
@@ -19,7 +20,7 @@ use App\Http\Controllers\DocsController;
 
 Route::get('/docs/queue', [DocsController::class, 'queueDoc'])->name('docs.queue');
 Route::get('/docs/event', [DocsController::class, 'eventDoc'])->name('docs.event');
-Route::get('/docs/auth', [DocsController::class, 'authDoc'])->name('docs.auth');
+Route::get('/docs/authenticate', [DocsController::class, 'authDoc'])->name('docs.authenticate');
 
 
 Route::get('/docs/queue/guide', [DocsController::class, 'queueGuideDoc'])->name('docs.queue.guide');

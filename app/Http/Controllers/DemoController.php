@@ -23,7 +23,7 @@ class DemoController extends Controller
         for ($i = 0; $i < 3; $i++) {
             SendEmailJob::dispatch($email); // Đưa job vào hàng đợi
         }
-        return response()->json(['message' => 'Email đã được đưa vào hàng đợi!']);
+        return response()->json(['message' => 'Gửi Email rooney.aws7292@gmail.com đã được đưa vào hàng đợi!']);
     }
 
 
@@ -64,7 +64,7 @@ class DemoController extends Controller
         
 
         event(new OrderShippedTest("Order123"));
-        return response()->json(['message' => 'Sự kiện đã được kích hoạt!']);
+        return response()->json(['message' => 'Sự kiện đã được kích hoạt!, đã gửi mail cho rooney.aws7292@gmail.com']);
     }
 
     public function authDemo()
