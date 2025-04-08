@@ -27,6 +27,28 @@ Route::get('/docs/queue/guide', [DocsController::class, 'queueGuideDoc'])->name(
 Route::get('/docs/event/guide', [DocsController::class, 'eventGuideDoc'])->name('docs.event.guide');
 Route::get('/docs/auth/guide', [DocsController::class, 'authGuideDoc'])->name('docs.auth.guide');
 
+
+
+// authentication
+use App\Http\Controllers\AuthController;
+
+Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
+Route::post('/register', [AuthController::class, 'register']);
+
+// Các route cần đăng nhập
+Route::middleware(['auth'])->group(function () {
+    Route::get('/dashboard', [AuthController::class, 'showdashboard'])->name('dashboard');
+    Route::get('/users/{id}/edit', [AuthController::class, 'edit'])->name('user.edit');
+    Route::put('/users/{id}', [AuthController::class, 'update'])->name('user.update');
+});
+
+
+
+
 // Route::get('/', function () {
 //     return Inertia::render('Welcome');
 // })->name('home');
