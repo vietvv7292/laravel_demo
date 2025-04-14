@@ -334,44 +334,89 @@ class User extends Authenticatable
 
 
                 <h5>4.2 Laravel Passport – Dành cho ứng dụng cần OAuth2 phức tạp</h5>
-                <p><strong>Laravel Passport</strong> phù hợp nếu bạn cần xác thực theo chuẩn OAuth2 – ví dụ cần cấp
-                    token truy cập cho bên thứ 3 hoặc quản lý các client riêng biệt.</p>
+                <p><strong>Laravel Passport</strong> là giải pháp xác thực đầy đủ dựa trên chuẩn
+                    <strong>OAuth2</strong>. Nó rất phù hợp nếu bạn cần:</p>
+                <ul>
+                    <li>Cấp token cho ứng dụng bên thứ ba</li>
+                    <li>Phân biệt giữa nhiều client (ví dụ: mobile app, SPA, bên đối tác...)</li>
+                    <li>Quản lý token có thời hạn, refresh token, và các quyền (scope)</li>
+                </ul>
 
                 <h6>Ưu điểm:</h6>
                 <ul>
-                    <li>Hỗ trợ đầy đủ các flow OAuth2: Authorization Code, Client Credentials, Password Grant...</li>
-                    <li>Tích hợp sẵn giao diện cấp token</li>
-                    <li>Bảo mật tốt hơn khi làm việc với ứng dụng bên thứ 3</li>
+                    <li>Hỗ trợ đầy đủ các flow OAuth2: Authorization Code, Client Credentials, Password Grant, Refresh
+                        Token...</li>
+                    <li>Tích hợp sẵn giao diện cấp token (dùng trong quá trình dev hoặc quản lý)</li>
+                    <li>Có thể cấu hình scope để giới hạn quyền của từng token</li>
                 </ul>
 
-                <h6>Cài đặt cơ bản:</h6>
+                <h6>Các bước cài đặt:</h6>
                 <pre><code>composer require laravel/passport
 php artisan migrate
 php artisan passport:install</code></pre>
 
-                <p>Cập nhật model <code>User</code>:</p>
+                <h6>Cập nhật model <code>User</code>:</h6>
                 <pre><code>use Laravel\Passport\HasApiTokens;
 
 class User extends Authenticatable
 {
-use HasApiTokens, Notifiable;
+    use HasApiTokens, Notifiable;
 }</code></pre>
 
-                <p>Trong <code>AuthServiceProvider</code>:</p>
+                <h6>Trong <code>App\Providers\AuthServiceProvider</code>:</h6>
                 <pre><code>use Laravel\Passport\Passport;
 
 public function boot()
 {
-Passport::routes();
+    Passport::routes();
 }</code></pre>
 
-                <p>Trong <code>config/auth.php</code>:</p>
+                <h6>Trong file <code>config/auth.php</code>, sửa phần guard <code>api</code>:</h6>
                 <pre><code>'guards' => [
-'api' => [
-'driver' => 'passport',
-'provider' => 'users',
-],
+    'api' => [
+        'driver' => 'passport',
+        'provider' => 'users',
+    ],
 ],</code></pre>
+
+                <h6>Route và xử lý đăng nhập để nhận token:</h6>
+                <pre><code>// Route trong routes/api.php
+Route::post('/login', [AuthController::class, 'login']);
+</code></pre>
+
+                <pre><code>// AuthController.php
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
+public function login(Request $request)
+{
+    if (!Auth::attempt($request->only('email', 'password'))) {
+        return response()->json(['message' => 'Sai thông tin đăng nhập'], 401);
+    }
+
+    $user = Auth::user();
+    $token = $user->createToken('API Token')->accessToken;
+
+    return response()->json([
+        'token' => $token,
+        'user' => $user,
+    ]);
+}
+</code></pre>
+
+                <h6>Bảo vệ route bằng middleware <code>auth:api</code>:</h6>
+                <pre><code>Route::middleware('auth:api')->get('/user', function (Request $request) {
+    return $request->user();
+});</code></pre>
+
+                <h6>Sử dụng Postman để test:</h6>
+                <ul>
+                    <li><code>POST /api/login</code>: gửi <strong>email</strong> và <strong>password</strong> trong body
+                        (JSON) để lấy access token.</li>
+                    <li><code>GET /api/user</code>: gửi <code>Authorization: Bearer &lt;token&gt;</code> trong header để
+                        truy cập.</li>
+                </ul>
+
 
                 <h5>4.3 So sánh Sanctum và Passport</h5>
                 <table class="table table-bordered">
