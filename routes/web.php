@@ -28,7 +28,6 @@ Route::get('/docs/event/guide', [DocsController::class, 'eventGuideDoc'])->name(
 Route::get('/docs/auth/guide', [DocsController::class, 'authGuideDoc'])->name('docs.auth.guide');
 
 
-
 // authentication
 use App\Http\Controllers\AuthController;
 

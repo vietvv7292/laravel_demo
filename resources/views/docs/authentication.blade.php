@@ -190,38 +190,9 @@ $name = Auth::user()->name;
 $email = auth()->user()->email;
 </code></pre>
 
-                <h3>4. Các Hệ Thống Liên Quan</h3>
+                <h3>4. Authentication API cho App</h3>
 
-
-                <h5>4.1 Laravel Sanctum</h5>
-                <pre><code>composer require laravel/sanctum
-php artisan vendor:publish --provider="Laravel\Sanctum\SanctumServiceProvider"
-php artisan migrate</code></pre>
-
-                <h5>4.2 Laravel Passport</h5>
-                <pre><code>composer require laravel/passport
-php artisan migrate
-php artisan passport:install</code></pre>
-
-                <h5>4.3 Middleware</h5>
-                <ul>
-                    <li><code>auth</code>: Kiểm tra người dùng đã đăng nhập</li>
-                    <li><code>guest</code>: Chỉ cho phép truy cập khi chưa đăng nhập</li>
-                    <li><code>verified</code>: Chỉ truy cập nếu email đã xác minh</li>
-                    <li><code>can:view-post</code>: Kiểm tra quyền cụ thể</li>
-                </ul>
-
-                <h5>4.4 Gợi Ý Mở Rộng</h5>
-                <ul>
-                    <li>Xác thực qua mạng xã hội (Google, Facebook): Laravel Socialite</li>
-                    <li>Xác minh email bằng queue</li>
-                    <li>Xác thực 2 yếu tố bằng OTP hoặc Google Authenticator</li>
-                    <li>Sử dụng package <code>spatie/laravel-permission</code> để phân quyền theo role</li>
-                </ul>
-
-                <h3>5. Chi tiết về Authentication API cho App</h3>
-
-                <h5>5.1 Laravel Sanctum – Dành cho SPA hoặc Mobile App đơn giản</h5>
+                <h5>4.1 Laravel Sanctum – Dành cho SPA hoặc Mobile App đơn giản</h5>
                 <p><strong>Laravel Sanctum</strong> là package nhẹ, dễ cấu hình, hỗ trợ xác thực API token, lý tưởng cho
                     SPA (Single Page Application) hoặc ứng dụng mobile không quá phức tạp.</p>
 
@@ -237,35 +208,132 @@ php artisan passport:install</code></pre>
 php artisan vendor:publish --provider="Laravel\Sanctum\SanctumServiceProvider"
 php artisan migrate</code></pre>
 
-                <p>Thêm middleware cho API:</p>
+                <p><strong>Giải thích:</strong></p>
+                <ul>
+                    <li><code>composer require laravel/sanctum</code>: Cài gói Sanctum để Laravel hỗ trợ xác thực API
+                        thông qua token.</li>
+                    <li><code>php artisan vendor:publish --provider="Laravel\Sanctum\SanctumServiceProvider"</code>:
+                        Copy file cấu hình <code>config/sanctum.php</code> từ gói Sanctum về project, dùng để tuỳ chỉnh.
+                    </li>
+                    <li><code>php artisan migrate</code>: Tạo bảng <code>personal_access_tokens</code> trong database để
+                        lưu các token.</li>
+                </ul>
+                {{-- <p>🛡️ Thêm middleware cho API: Bạn sẽ thêm đoạn sau vào file app/Http/Kernel.php, trong phần middlewareGroups, cụ thể là group 'api':</p>
                 <pre><code>'api' => [
-\Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
-'throttle:api',
-\Illuminate\Routing\Middleware\SubstituteBindings::class,
+    \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
+    'throttle:api',
+    \Illuminate\Routing\Middleware\SubstituteBindings::class,
 ],</code></pre>
 
-                <p>Đăng nhập và trả về token:</p>
+                <p><strong>Giải thích:</strong></p>
+                <ul>
+                    <li><code>EnsureFrontendRequestsAreStateful</code>: Middleware này dùng cho ứng dụng dạng SPA
+                        (Single Page Application) sử dụng cookie để xác thực. Nó đảm bảo các request từ frontend được xử
+                        lý đúng trong trạng thái đăng nhập.</li>
+                    <li><code>throttle:api</code>: Giới hạn số lượng request trong một khoảng thời gian (rate limiting),
+                        tránh spam API.</li>
+                    <li><code>SubstituteBindings</code>: Tự động binding các route parameters vào model tương ứng (Route
+                        Model Binding).</li>
+                </ul> --}}
+
+
+                <h4>📌 Tạo Route cho API sử dụng Sanctum</h4>
+
+                <p>Thêm các route sau vào <code>routes/api.php</code>:</p>
+
                 <pre><code>
-public function login(Request $request)
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ApiController;
+
+// Route đăng nhập trả về token
+Route::post('/login', [ApiController::class, 'login']);
+
+// Route được bảo vệ bằng Sanctum
+Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+    return $request->user();
+});
+</code></pre>
+
+                <h4>📌 Tạo Controller xử lý đăng nhập</h4>
+
+                <p>Tạo <code>ApiController</code> nếu bạn chưa có:</p>
+                <pre><code>php artisan make:controller ApiController</code></pre>
+
+                <p>Thêm phương thức <code>login</code> vào <code>app/Http/Controllers/ApiController.php</code>:</p>
+
+                <pre><code>
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use App\Models\User;
+
+class ApiController extends Controller
 {
-$user = User::where('email', $request->email)->first();
+    public function login(Request $request)
+    {
+        $user = User::where('email', $request->email)->first();
 
-if (! $user || ! Hash::check($request->password, $user->password)) {
-return response()->json(['message' => 'Sai thông tin'], 401);
+        if (! $user || ! Hash::check($request->password, $user->password)) {
+            return response()->json(['message' => 'Sai thông tin'], 401);
+        }
+
+        return response()->json([
+            'token' => $user->createToken('app-token')->plainTextToken
+        ]);
+    }
 }
+</code></pre>
+                <h6>Thêm trait vào model User:</h6>
+                <p>Để sử dụng được phương thức <code>createToken()</code>, bạn cần thêm trait <code>HasApiTokens</code>
+                    vào model <code>User</code>:</p>
 
-return response()->json([
-'token' => $user->createToken('app-token')->plainTextToken
-]);
+                <pre><code>
+// File: app/Models/User.php
+
+use Laravel\Sanctum\HasApiTokens;
+
+class User extends Authenticatable
+{
+    use HasApiTokens, HasFactory, Notifiable;
+
+    // ...
 }
 </code></pre>
 
-                <p>Bảo vệ route bằng middleware:</p>
-                <pre><code>Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-return $request->user();
-});</code></pre>
 
-                <h5>5.2 Laravel Passport – Dành cho ứng dụng cần OAuth2 phức tạp</h5>
+                <p>Sau đó bạn có thể dùng Postman để test:</p>
+                <ul>
+                    <li>
+                        <code>POST /api/login</code>: Gửi email và password để nhận token.
+                        <br>
+                        <strong>Body (JSON):</strong>
+                        <pre><code>{
+    "email": "user@example.com",
+    "password": "your_password"
+}</code></pre>
+                        <strong>Headers:</strong>
+                        <ul>
+                            <li><code>Accept: application/json</code></li>
+                            <li><code>Content-Type: application/json</code></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <code>GET /api/user</code>: Gửi token trong header Authorization để truy cập.
+                        <br>
+                        <strong>Headers:</strong>
+                        <ul>
+                            <li><code>Accept: application/json</code></li>
+                            <li><code>Authorization: Bearer &lt;token&gt;</code> (thay <code>&lt;token&gt;</code> bằng
+                                token bạn nhận được khi login)</li>
+                        </ul>
+                    </li>
+                </ul>
+
+
+
+                <h5>4.2 Laravel Passport – Dành cho ứng dụng cần OAuth2 phức tạp</h5>
                 <p><strong>Laravel Passport</strong> phù hợp nếu bạn cần xác thực theo chuẩn OAuth2 – ví dụ cần cấp
                     token truy cập cho bên thứ 3 hoặc quản lý các client riêng biệt.</p>
 
@@ -305,7 +373,7 @@ Passport::routes();
 ],
 ],</code></pre>
 
-                <h5>5.3 So sánh Sanctum và Passport</h5>
+                <h5>4.3 So sánh Sanctum và Passport</h5>
                 <table class="table table-bordered">
                     <thead class="table-light">
                         <tr>
