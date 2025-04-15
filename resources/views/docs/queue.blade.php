@@ -137,16 +137,12 @@ class SendEmailJob extends Job
                 </p>
                 <pre><code>php artisan queue:failed</code></pre>
 
-                <h3>8. Sử Dụng Supervisor Để Quản Lý Queue Workers</h3>
-                <p>
-                    Nếu bạn muốn chạy các worker liên tục trên môi trường production, bạn có thể sử dụng Supervisor để
-                    giám sát và khởi động lại worker khi cần thiết.
-                </p>
-                <p>
-                    Ví dụ cấu hình Supervisor cho Laravel Queue:
-                </p>
-                <pre><code>
-[program:laravel-worker]
+                <h3>8. Cấu hình Supervisor cho Laravel Queue</h3>
+                <p><strong>Supervisor</strong> giúp Laravel queue worker chạy liên tục và tự khởi động lại nếu gặp lỗi.
+                    Đây là cách cấu hình cơ bản:</p>
+
+                <h6>Cấu hình Supervisor:</h6>
+                <pre><code>[program:laravel-worker]
 process_name=%(program_name)s_%(process_num)02d
 command=php /path/to/artisan queue:work --sleep=3 --tries=3
 autostart=true
@@ -155,11 +151,38 @@ user=your-username
 numprocs=8
 redirect_stderr=true
 stdout_logfile=/path/to/your/logs/laravel-worker.log
-                </code></pre>
-                <p>
-                    Bạn có thể thêm cấu hình vào tệp <code>/etc/supervisor/conf.d/laravel-worker.conf</code> và sử dụng
-                    Supervisor để quản lý worker của mình.
-                </p>
+</code></pre>
+
+                <ul>
+                    <li><code>command</code>: Lệnh chạy queue worker của Laravel.</li>
+                    <li><code>--sleep=3</code>: Nếu không có job, worker sẽ nghỉ 3 giây trước khi thử lại.</li>
+                    <li><code>--tries=3</code>: Job sẽ thử tối đa 3 lần trước khi bị đưa vào bảng
+                        <code>failed_jobs</code>.</li>
+                    <li><code>numprocs=8</code>: Chạy song song 8 worker.</li>
+                    <li><code>user</code>: Tên người dùng hệ thống chạy lệnh (ví dụ: <code>www-data</code>).</li>
+                    <li><code>stdout_logfile</code>: File log để giám sát worker.</li>
+                </ul>
+
+                <h6>Ví dụ thực tế:</h6>
+                <pre><code>[program:laravel-worker]
+process_name=%(program_name)s_%(process_num)02d
+command=php /var/www/laravel/artisan queue:work --sleep=3 --tries=3
+autostart=true
+autorestart=true
+user=www-data
+numprocs=4
+redirect_stderr=true
+stdout_logfile=/var/www/laravel/storage/logs/laravel-worker.log
+</code></pre>
+
+                <h6>Đặt file cấu hình:</h6>
+                <pre><code>/etc/supervisor/conf.d/laravel-worker.conf</code></pre>
+
+                <h6>Kích hoạt Supervisor:</h6>
+                <pre><code>sudo supervisorctl reread
+sudo supervisorctl update
+sudo supervisorctl start laravel-worker:*</code></pre>
+
                 <h3>9. Hẹn Lịch Job (Scheduling)</h3>
                 <p>
                     Laravel cung cấp hệ thống lập lịch mạnh mẽ thông qua <code>Task Scheduling</code>. Bạn có thể định
