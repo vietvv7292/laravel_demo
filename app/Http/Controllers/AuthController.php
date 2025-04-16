@@ -16,6 +16,21 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
+        // Lệnh kiểm tra thông tin đăng nhập:
+        // Auth::attempt($credentials) sẽ kiểm tra xem email và password có hợp lệ không.
+        // Nếu đúng, Laravel sẽ đăng nhập người dùng và trả về true.
+        // Nếu sai, trả về false.
+        // Hàm này sẽ tự động hash password để so sánh với password trong DB.
+
+        // ✅ Nếu muốn xác thực theo 'username' thay vì 'email':
+        // $credentials = $request->only('username', 'password');
+        // => Laravel sẽ dùng cột 'username' trong bảng users để xác thực.
+
+        // ✅ Ghi nhớ đăng nhập:
+        // Auth::attempt($credentials, $remember)
+        // Nếu $remember = true, Laravel sẽ lưu thông tin đăng nhập vào cookie để không bị đăng xuất khi tắt trình duyệt.
+
+        
         $credentials = $request->only('email', 'password');
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();

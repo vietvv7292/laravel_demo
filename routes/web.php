@@ -42,7 +42,7 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [AuthController::class, 'showdashboard'])->name('dashboard');
     Route::get('/users/{id}/edit', [AuthController::class, 'edit'])->name('user.edit');
-    Route::put('/users/{id}', [AuthController::class, 'update'])->name('user.update');
+    Route::post('/users/{id}', [AuthController::class, 'update'])->name('user.update');
 });
 
 
