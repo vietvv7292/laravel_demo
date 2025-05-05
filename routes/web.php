@@ -12,6 +12,12 @@ Route::get('/', [DemoController::class, 'index']);
 Route::get('/demo/queue', [DemoController::class, 'queueDemo']);
 Route::get('/demo/event', [DemoController::class, 'eventDemo']);
 Route::get('/demo/auth', [DemoController::class, 'authDemo']);
+Route::get('/demo/broadcasting', [DemoController::class, 'broadcastingDemo']);
+// Route::get('/demo/message', [DemoController::class, 'messageDemo']);
+
+Route::get('/demo/message', [DemoController::class, 'messageForm']);
+Route::post('/demo/message', [DemoController::class, 'messageSend']);
+
 
 
 Route::get('/queue-demo', [QueueController::class, 'sendEmail']);
@@ -21,7 +27,7 @@ use App\Http\Controllers\DocsController;
 Route::get('/docs/queue', [DocsController::class, 'queueDoc'])->name('docs.queue');
 Route::get('/docs/event', [DocsController::class, 'eventDoc'])->name('docs.event');
 Route::get('/docs/authenticate', [DocsController::class, 'authDoc'])->name('docs.authenticate');
-
+Route::get('/docs/broadcasting', [DocsController::class, 'broadcastingDemo']);
 
 Route::get('/docs/queue/guide', [DocsController::class, 'queueGuideDoc'])->name('docs.queue.guide');
 Route::get('/docs/event/guide', [DocsController::class, 'eventGuideDoc'])->name('docs.event.guide');

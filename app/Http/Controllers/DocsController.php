@@ -21,5 +21,10 @@ class DocsController extends Controller
         return view('docs.authentication');
     }
 
+    public function broadcastingDemo()
+    {
+        return view('docs.broadcasting');
+    }
+
 
 }

@@ -6,6 +6,10 @@ use Illuminate\Http\Request;
 use App\Events\OrderShippedTest;
 use App\Jobs\SendEmailJob;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+
+use App\Events\MessageSent;
+
 
 class DemoController extends Controller
 {
@@ -70,5 +74,25 @@ class DemoController extends Controller
     public function authDemo()
     {
         return Auth::check() ? redirect('dashboard') : redirect('/login');
+    }
+
+
+    public function broadcastingDemo()
+    {
+        return view('demo.broadcasting');
+    }
+
+    public function messageForm()
+    {
+        return view('demo.message'); // form gửi
+    }
+
+    public function messageSend(Request $request)
+    {
+        $message = $request->input('message', '');
+        if (!empty($message)) {
+            broadcast(new MessageSent($message))->toOthers();
+        }
+        return response()->json(['status' => 'ok']);
     }
 }

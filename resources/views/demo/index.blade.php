@@ -44,6 +44,16 @@
                             <a href="{{ url('/demo/auth') }}" class="btn btn-warning flex-fill">Demo</a>
                         </div>
                     </li>
+                    <li class="list-group-item">
+                        <h5 class="text-primary">Demo Broadcasting (WebSockets)</h5>
+                        <p class="text-muted">Truyền dữ liệu thời gian thực từ server tới client sử dụng WebSockets và Laravel Echo.</p>
+                        <div class="d-flex">
+                            <a href="{{ url('/docs/broadcasting') }}" class="btn btn-outline-secondary flex-fill me-2">Tài liệu</a>
+                            {{-- <a href="{{ url('/docs/broadcasting/guide') }}" class="btn btn-outline-secondary flex-fill me-2">Tạo Demo</a> --}}
+                            <a href="{{ url('/demo/broadcasting') }}" class="btn btn-primary flex-fill">Demo</a>
+                        </div>
+                    </li>
+                    
                 </ul>
             </div>
             <div class="card-footer text-center">
