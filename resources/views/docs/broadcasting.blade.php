@@ -60,34 +60,38 @@ PUSHER_APP_CLUSTER=your-cluster</code></pre>
 ],</code></pre>
 
                 <h5>2.2. Cài đặt và cấu hình Laravel WebSockets (Tự-hosted)</h5>
-                <p>Laravel WebSockets là một giải pháp WebSockets tự-hosted, giúp bạn không phải phụ thuộc vào dịch vụ
-                    bên ngoài như Pusher. Để cài đặt Laravel WebSockets, thực hiện các bước sau:</p>
+                <p>Laravel WebSockets là một giải pháp WebSockets tự-hosted, giúp bạn không cần phụ thuộc vào dịch vụ
+                    Pusher bên ngoài.</p>
 
                 <p>Cài đặt gói Laravel WebSockets:</p>
                 <pre><code>composer require beyondcode/laravel-websockets</code></pre>
 
-                <p>Cập nhật cấu hình trong file <code>.env</code> để sử dụng Laravel WebSockets:</p>
+                <p>Cập nhật file <code>.env</code> như sau (vẫn dùng <code>pusher</code>):</p>
                 <pre><code>.env:
-BROADCAST_DRIVER=websockets</code></pre>
+BROADCAST_DRIVER=pusher
+PUSHER_APP_ID=local
+PUSHER_APP_KEY=local
+PUSHER_APP_SECRET=local
+PUSHER_APP_CLUSTER=mt1</code></pre>
 
-                <p>Đảm bảo cấu hình trong file <code>config/broadcasting.php</code> như sau:</p>
-                <pre><code>config/broadcasting.php:
-'websockets' => [
+                <p>Trong file <code>config/broadcasting.php</code>, chỉ cần chỉnh phần <code>pusher</code> như sau:</p>
+                <pre><code>'pusher' => [
     'driver' => 'pusher',
-    'key' => env('PUSHER_APP_KEY'),
-    'secret' => env('PUSHER_APP_SECRET'),
-    'app_id' => env('PUSHER_APP_ID'),
+    'key' => env('PUSHER_APP_KEY', 'local'),
+    'secret' => env('PUSHER_APP_SECRET', 'local'),
+    'app_id' => env('PUSHER_APP_ID', 'local'),
     'options' => [
-        'cluster' => env('PUSHER_APP_CLUSTER'),
-        'useTLS' => true,
-        'host' => env('WEB_SOCKET_SERVER_HOST', '127.0.0.1'),
-        'port' => env('WEB_SOCKET_SERVER_PORT', 6001),
+        'cluster' => env('PUSHER_APP_CLUSTER', 'mt1'),
+        'useTLS' => false,
+        'host' => '127.0.0.1',
+        'port' => 6001,
         'scheme' => 'http',
     ],
 ],</code></pre>
 
-                <p>Khởi động WebSocket server bằng lệnh:</p>
+                <p>Cuối cùng, khởi động WebSocket server:</p>
                 <pre><code>php artisan websockets:serve</code></pre>
+
 
                 <h5>2.3. Cài đặt và cấu hình Redis</h5>
                 <p>Redis có thể sử dụng làm backend cho Broadcasting khi bạn cần triển khai với nhiều server hoặc không

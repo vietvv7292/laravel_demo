@@ -63,7 +63,7 @@
         <!-- Tin nhắn sẽ xuất hiện ở đây -->
     </div>
     <div class="chat-footer text-center">
-        <em>TIN NHẮN</em>
+        <em><a target="blank" href="/demo/message">LINK GỬI TIN NHẮN</a></em>
     </div>
 </div>
 
