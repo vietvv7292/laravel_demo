@@ -83,7 +83,56 @@
     </ul>
     <p><strong>Laravel Broadcasting</strong> giúp mọi thứ trở nên đơn giản, tích hợp luôn với hệ thống Event của
         Laravel.</p>
-    <h2>📊 Bảng So Sánh Các Dịch Vụ Broadcasting</h2>
+
+    {{-- Laravel Broadcasting Flow & Comparison --}}
+
+    <section class="mt-5">
+        <h2 class="text-xl font-bold mb-3">⚙️ Luồng hoạt động của Laravel Broadcasting</h2>
+        <ol class="list-decimal list-inside space-y-1">
+            <li>Client đăng ký kênh thông qua Laravel Echo (WebSocket).</li>
+            <li>Server phát sinh event (ví dụ: gửi tin nhắn).</li>
+            <li>Laravel sử dụng driver Broadcasting (Pusher, Soketi...) để đẩy sự kiện real-time.</li>
+            <li>Client nhận dữ liệu ngay lập tức qua WebSocket, không cần hỏi lại server.</li>
+        </ol>
+    </section>
+
+    <section class="mt-6">
+        <h2 class="text-xl font-bold mb-3">🔁 So sánh với các phương pháp khác</h2>
+        <table class="table-auto w-full border border-gray-300 text-sm">
+            <thead class="bg-gray-100">
+                <tr>
+                    <th class="border border-gray-300 px-2 py-1 text-left">Phương pháp</th>
+                    <th class="border border-gray-300 px-2 py-1 text-left">Đặc điểm</th>
+                    <th class="border border-gray-300 px-2 py-1 text-left">Nhược điểm</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="border px-2 py-1">AJAX Polling</td>
+                    <td class="border px-2 py-1">Gọi API liên tục để kiểm tra tin nhắn mới</td>
+                    <td class="border px-2 py-1">Tốn băng thông, tăng tải server, độ trễ cao</td>
+                </tr>
+                <tr>
+                    <td class="border px-2 py-1">Long Polling</td>
+                    <td class="border px-2 py-1">Giữ kết nối mở và phản hồi khi có dữ liệu mới</td>
+                    <td class="border px-2 py-1">Trễ thấp hơn polling nhưng khó scale, tiêu tốn tài nguyên</td>
+                </tr>
+                <tr>
+                    <td class="border px-2 py-1">Viết tay bằng Socket.IO</td>
+                    <td class="border px-2 py-1">Dùng Node.js để tạo WebSocket server riêng</td>
+                    <td class="border px-2 py-1">Mạnh mẽ nhưng cần hệ thống riêng, khó tích hợp với Laravel</td>
+                </tr>
+                <tr>
+                    <td class="border px-2 py-1 font-semibold">Laravel Broadcasting</td>
+                    <td class="border px-2 py-1">Tích hợp sẵn với Laravel, sử dụng WebSocket driver như Soketi</td>
+                    <td class="border px-2 py-1">Tối ưu cho Laravel, dễ triển khai, nhưng cần queue và WebSocket server
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <h1>📊 Bảng So Sánh Các Dịch Vụ Broadcasting</h1>
     <table>
         <thead>
             <tr>
