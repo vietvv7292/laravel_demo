@@ -175,6 +175,7 @@ window.Pusher = require('pusher-js');
 window.Echo = new Echo({
     broadcaster: 'pusher',
     key: import.meta.env.VITE_PUSHER_APP_KEY,
+    cluster: process.env.MIX_PUSHER_APP_CLUSTER,
     wsHost: window.location.hostname,
     wsPort: 6001,
     forceTLS: false,
@@ -189,6 +190,38 @@ window.Echo = new Echo({
     .listen('MessageSent', (e) => {
         console.log('Tin nhắn mới:', e.message);
     });</code></pre>
+
+                <table class="table-auto w-full border border-gray-300 text-sm">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="border px-4 py-2 text-left">Giải pháp</th>
+                            <th class="border px-4 py-2 text-left">Ưu điểm</th>
+                            <th class="border px-4 py-2 text-left">Nhược điểm</th>
+                            <th class="border px-4 py-2 text-left">Khi nào nên dùng</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="border px-4 py-2 font-semibold">Pusher</td>
+                            <td class="border px-4 py-2">Cấu hình đơn giản, ổn định, có dashboard quản lý</td>
+                            <td class="border px-4 py-2">Tốn phí sau giới hạn, phụ thuộc bên thứ 3</td>
+                            <td class="border px-4 py-2">Dự án nhỏ, demo nhanh, không cần tự vận hành server</td>
+                        </tr>
+                        <tr>
+                            <td class="border px-4 py-2 font-semibold">Laravel WebSockets</td>
+                            <td class="border px-4 py-2">Tự host, tích hợp sâu với Laravel, miễn phí</td>
+                            <td class="border px-4 py-2">Phải tự quản lý server, khó scale, dễ lỗi version</td>
+                            <td class="border px-4 py-2">Dự án vừa, cần tiết kiệm, chủ động quản lý server</td>
+                        </tr>
+                        <tr>
+                            <td class="border px-4 py-2 font-semibold">Redis</td>
+                            <td class="border px-4 py-2">Hiệu năng cao, phù hợp scale lớn, tận dụng Redis sẵn có</td>
+                            <td class="border px-4 py-2">Không hỗ trợ WebSocket trực tiếp, cần thêm server
+                                Node/Socket.IO</td>
+                            <td class="border px-4 py-2">Dự án lớn, nhiều server, cần hiệu năng và sẵn Redis</td>
+                        </tr>
+                    </tbody>
+                </table>
 
                 <hr class="my-5">
                 <h5>7. Các loại Chat trong Laravel</h5>
