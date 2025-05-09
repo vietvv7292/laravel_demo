@@ -69,7 +69,7 @@
         <li>Chat realtime</li>
         <li>Thông báo (notifications) tức thời</li>
         <li>Cập nhật dữ liệu bảng/biểu đồ không cần reload</li>
-        <li>Ứng dụng multiplayer hoặc collaborative</li>
+        <li>Ứng dụng multiplayer hoặc collaborative(cho phép nhiều người dùng tương tác cùng lúc trên cùng một nội dung hoặc tài liệu)</li>
     </ul>
     <p>Broadcasting kết hợp giữa sự kiện Laravel và WebSockets hoặc dịch vụ push để truyền dữ liệu.</p>
 
