@@ -86,16 +86,6 @@
 
     {{-- Laravel Broadcasting Flow & Comparison --}}
 
-    <section class="mt-5">
-        <h2 class="text-xl font-bold mb-3">⚙️ Luồng hoạt động của Laravel Broadcasting</h2>
-        <ol class="list-decimal list-inside space-y-1">
-            <li>Client đăng ký kênh thông qua Laravel Echo (WebSocket).</li>
-            <li>Server phát sinh event (ví dụ: gửi tin nhắn).</li>
-            <li>Laravel sử dụng driver Broadcasting (Pusher, Soketi...) để đẩy sự kiện real-time.</li>
-            <li>Client nhận dữ liệu ngay lập tức qua WebSocket, không cần hỏi lại server.</li>
-        </ol>
-    </section>
-
     <section class="mt-6">
         <h2 class="text-xl font-bold mb-3">🔁 So sánh với các phương pháp khác</h2>
         <table class="table-auto w-full border border-gray-300 text-sm">
@@ -130,6 +120,16 @@
                 </tr>
             </tbody>
         </table>
+    </section>
+
+    <section class="mt-5">
+        <h2 class="text-xl font-bold mb-3">⚙️ Luồng hoạt động của Laravel Broadcasting</h2>
+        <ol class="list-decimal list-inside space-y-1">
+            <li>Client đăng ký kênh thông qua Laravel Echo (WebSocket).</li>
+            <li>Server phát sinh event (ví dụ: gửi tin nhắn).</li>
+            <li>Laravel sử dụng driver Broadcasting (Pusher, Soketi...) để đẩy sự kiện real-time.</li>
+            <li>Client nhận dữ liệu ngay lập tức qua WebSocket, không cần hỏi lại server.</li>
+        </ol>
     </section>
 
     <h1>📊 Bảng So Sánh Các Dịch Vụ Broadcasting</h1>
