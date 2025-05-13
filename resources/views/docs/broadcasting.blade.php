@@ -238,12 +238,38 @@ public function broadcastOn()
 
     <h3>Frontend:</h3>
     <p>Sử dụng Laravel Echo và Pusher JS trên frontend để lắng nghe các sự kiện:</p>
-    <pre><code>
+
+    <h4>📥 Import thư viện vào frontend:</h4>
+    <p>
+        Trong tệp JavaScript chính (ví dụ: <code>resources/js/bootstrap.js</code> hoặc
+        <code>resources/js/app.js</code>), bạn cần import và khởi tạo Laravel Echo như sau:
+    </p>
+
+    <pre><code class="language-js">
+import Echo from 'laravel-echo';
+import Pusher from 'pusher-js';
+
+window.Pusher = Pusher;
+
+window.Echo = new Echo({
+    broadcaster: 'pusher',
+    key: import.meta.env.VITE_PUSHER_APP_KEY,
+    cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER,
+    forceTLS: true,
+});
+</code></pre>
+
+    <p>
+        Sau đó bạn có thể lắng nghe kênh như ví dụ dưới đây:
+    </p>
+
+    <pre><code class="language-js">
 Echo.channel('chat')
-    .listen('MessageSent', (event) => {
-        console.log(event.message);
+    .listen('MessageSent', (e) => {
+        console.log(e.message);
     });
-    </code></pre>
+</code></pre>
+
 
     <h2>🧩 2. Laravel WebSockets – Tự host như Pusher</h2>
     <p>Laravel WebSockets là một gói tự host WebSocket như Pusher, cho phép bạn sử dụng WebSockets mà không cần phải dựa
@@ -279,13 +305,39 @@ Echo.channel('chat')
     <pre><code>php artisan websockets:serve</code></pre>
 
     <h3>Frontend:</h3>
-    <p>Sử dụng Laravel Echo để kết nối tới WebSockets server:</p>
-    <pre><code>
+    <p>Sử dụng Laravel Echo và Pusher JS trên frontend để lắng nghe các sự kiện:</p>
+
+    <h4>📥 Import thư viện vào frontend:</h4>
+    <p>
+        Trong tệp JavaScript chính (ví dụ: <code>resources/js/bootstrap.js</code> hoặc
+        <code>resources/js/app.js</code>), bạn cần import và khởi tạo Laravel Echo như sau:
+    </p>
+
+    <pre><code class="language-js">
+import Echo from 'laravel-echo';
+import Pusher from 'pusher-js';
+
+window.Pusher = Pusher;
+
+window.Echo = new Echo({
+    broadcaster: 'pusher',
+    key: import.meta.env.VITE_PUSHER_APP_KEY,
+    cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER,
+    forceTLS: true,
+});
+</code></pre>
+
+    <p>
+        Sau đó bạn có thể lắng nghe kênh như ví dụ dưới đây:
+    </p>
+
+    <pre><code class="language-js">
 Echo.channel('chat')
-    .listen('MessageSent', (event) => {
-        console.log(event.message);
+    .listen('MessageSent', (e) => {
+        console.log(e.message);
     });
-    </code></pre>
+</code></pre>
+
 
     <h2>⚡ 3. Soketi – Tự host, nhẹ, siêu nhanh</h2>
     <p>Soketi là một WebSocket server nhẹ, cực kỳ nhanh và tương thích với API của Pusher. Nó được thiết kế để sử dụng
@@ -319,13 +371,39 @@ PUSHER_APP_CLUSTER=mt1
     </code></pre>
 
     <h3>Frontend:</h3>
-    <p>Sử dụng Laravel Echo với cấu hình Pusher API như sau:</p>
-    <pre><code>
+    <p>Sử dụng Laravel Echo và Pusher JS trên frontend để lắng nghe các sự kiện:</p>
+
+    <h4>📥 Import thư viện vào frontend:</h4>
+    <p>
+        Trong tệp JavaScript chính (ví dụ: <code>resources/js/bootstrap.js</code> hoặc
+        <code>resources/js/app.js</code>), bạn cần import và khởi tạo Laravel Echo như sau:
+    </p>
+
+    <pre><code class="language-js">
+import Echo from 'laravel-echo';
+import Pusher from 'pusher-js';
+
+window.Pusher = Pusher;
+
+window.Echo = new Echo({
+    broadcaster: 'pusher',
+    key: import.meta.env.VITE_PUSHER_APP_KEY,
+    cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER,
+    forceTLS: true,
+});
+</code></pre>
+
+    <p>
+        Sau đó bạn có thể lắng nghe kênh như ví dụ dưới đây:
+    </p>
+
+    <pre><code class="language-js">
 Echo.channel('chat')
-    .listen('MessageSent', (event) => {
-        console.log(event.message);
+    .listen('MessageSent', (e) => {
+        console.log(e.message);
     });
-    </code></pre>
+</code></pre>
+
 
     <h2>☁️ 4. Ably – Cloud Broadcaster</h2>
     <p>Ably là một dịch vụ đám mây cung cấp khả năng phát sóng dữ liệu real-time. Đây là một giải pháp đám mây mạnh mẽ
@@ -352,13 +430,39 @@ ABLY_KEY=your-ably-key
     </code></pre>
 
     <h3>Frontend:</h3>
-    <p>Sử dụng Laravel Echo để kết nối tới Ably:</p>
-    <pre><code>
+    <p>Sử dụng Laravel Echo và Pusher JS trên frontend để lắng nghe các sự kiện:</p>
+
+    <h4>📥 Import thư viện vào frontend:</h4>
+    <p>
+        Trong tệp JavaScript chính (ví dụ: <code>resources/js/bootstrap.js</code> hoặc
+        <code>resources/js/app.js</code>), bạn cần import và khởi tạo Laravel Echo như sau:
+    </p>
+
+    <pre><code class="language-js">
+import Echo from 'laravel-echo';
+import Pusher from 'pusher-js';
+
+window.Pusher = Pusher;
+
+window.Echo = new Echo({
+    broadcaster: 'pusher',
+    key: import.meta.env.VITE_PUSHER_APP_KEY,
+    cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER,
+    forceTLS: true,
+});
+</code></pre>
+
+    <p>
+        Sau đó bạn có thể lắng nghe kênh như ví dụ dưới đây:
+    </p>
+
+    <pre><code class="language-js">
 Echo.channel('chat')
-    .listen('MessageSent', (event) => {
-        console.log(event.message);
+    .listen('MessageSent', (e) => {
+        console.log(e.message);
     });
-    </code></pre>
+</code></pre>
+
 
     <h2>🔁 5. Redis – Custom WebSocket Broadcaster</h2>
     <p>Redis có thể được sử dụng như một công cụ để truyền tải sự kiện qua WebSockets, kết hợp với các thư viện như
@@ -380,13 +484,39 @@ BROADCAST_DRIVER=redis
     <p>Đảm bảo Redis đang chạy trên hệ thống của bạn.</p>
 
     <h3>Frontend:</h3>
-    <p>Sử dụng Laravel Echo để lắng nghe sự kiện từ Redis:</p>
-    <pre><code>
+    <p>Sử dụng Laravel Echo và Pusher JS trên frontend để lắng nghe các sự kiện:</p>
+
+    <h4>📥 Import thư viện vào frontend:</h4>
+    <p>
+        Trong tệp JavaScript chính (ví dụ: <code>resources/js/bootstrap.js</code> hoặc
+        <code>resources/js/app.js</code>), bạn cần import và khởi tạo Laravel Echo như sau:
+    </p>
+
+    <pre><code class="language-js">
+import Echo from 'laravel-echo';
+import Pusher from 'pusher-js';
+
+window.Pusher = Pusher;
+
+window.Echo = new Echo({
+    broadcaster: 'pusher',
+    key: import.meta.env.VITE_PUSHER_APP_KEY,
+    cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER,
+    forceTLS: true,
+});
+</code></pre>
+
+    <p>
+        Sau đó bạn có thể lắng nghe kênh như ví dụ dưới đây:
+    </p>
+
+    <pre><code class="language-js">
 Echo.channel('chat')
-    .listen('MessageSent', (event) => {
-        console.log(event.message);
+    .listen('MessageSent', (e) => {
+        console.log(e.message);
     });
-    </code></pre>
+</code></pre>
+
 
     <h2>🔔 Lưu Ý Khi Sử Dụng Queue Trong Broadcasting</h2>
     <p>Trong Laravel Broadcasting, nếu bạn sử dụng <strong>queue</strong> để xử lý các sự kiện, bạn cần chắc chắn rằng
